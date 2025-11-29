@@ -1,11 +1,11 @@
-# Privacy-Preserving Federated Learning Anomaly Detection System
+Privacy-Preserving Federated Learning Anomaly Detection System
 
-## Project Overview
+Project Overview
 
-This repository contains a **Privacy-Preserving Federated Learning (FL) anomaly detection System** developed within the RIGOUROUS project (Grant Agreement No. 101095933, Horizon Europe). The framework is designed to enable privacy-aware model training across distributed IoT / IIoT devices. 
+This repository contains a **Privacy-Preserving Federated Learning (FL) anomaly detection System** developed within the RIGOUROUS project (Grant Agreement No. 101095933, Horizon Europe). The framework is designed to enable privacy-aware model training across distributed IoT / IIoT devices. This setup demonstrates the feasibility of privacy-enhanced federated learning for IIoT anomaly detection using Flask based APIs.
 
 
-## Key System Features 
+Key System Features 
 
 * Two-client federated learning architecture
 * Flask-based microservice communication
@@ -15,79 +15,62 @@ This repository contains a **Privacy-Preserving Federated Learning (FL) anomaly 
 ---
 The system consists of:
 
-* **Two FL Clients (Client0 and Client1)** simulating IoT devices
-* **One Aggregator Server** coordinating the federated learning process
-* Optional integration with **Encryption-as-a-Service (EaaS)** This option lets the client send data to a remote encryption service for homomorphic encryption instead of performing the computationally heavy encryption steps locally. In this code, only the request-handling logic is demonstrated, and the relevant encryption calls have been commented out. 
-* Integration with **Kafka** to transmit generated STIX messages to the decision engine (Provided by ONE Partner)
+Two FL Clients (Client0 and Client1)** simulating IoT devices
+2. One Aggregator Server** coordinating the federated learning process
+3. Optional integration with **Encryption-as-a-Service (EaaS)** This option lets the client send data to a remote encryption service for homomorphic encryption instead of performing the computationally heavy encryption steps locally (The idea Provided by ICITFI Partner). In this code, only the request-handling logic is demonstrated, and the relevant encryption calls have been commented out. 
+4. Integration with **Kafka** to transmit generated STIX messages to the decision engine (Provided by ONE Partner)
 
 The framework supports two operational modes:
 
 * **Plain Mode**: Standard federated learning without encryption (to enable, select *plain mode* in `option.py files both in clients and aggregator server`)
 * **Locally Paillier Mode**: Secure FL using Paillier homomorphic encryption for encrypted model exchange (to enable, select *Paillier mode* in `option.py files both in clients and aggregator server`)
 
+---------------------------------------------------- Datasets ---------------------------------------------------------------------------------
+This system is build based on WUSTL-IIoT(load_dataset.py) and DDoS_sandbox (load_dataset2.py) Datasets and is based on Flask APIs
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
-This system is build based on WUSTL-IIoT(load_dataset.py) and DDoS_sandbox (load_dataset2.py) Datasets 
----
 
-## Operational Modes Summary
+System Architecture
 
-| Mode          | Description                                                                                                                |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Plain Mode    | Direct communication between clients and server without encryption. Suitable for testing and debugging.                    |
-| Paillier Mode | Secure encrypted model exchange using Paillier homomorphic encryption. Intended for privacy-critical deployment scenarios. |
-
-This setup demonstrates the feasibility of privacy-enhanced federated learning for IIoT anomaly detection under real deployment constraints.
-
----
-
-## System Architecture
-
-### VM Configuration
-
-### Client VM
-
-This VM simulates two IoT devices running in parallel:
+Client VM: This VM simulates two IoT devices running in parallel:
 
 * Device 0 → Client0
 * Device 1 → Client1
 
-### Server VM
+Server VM: This VM hosts the Aggregator Server coordinating the federated learning rounds.
 
-This VM hosts the Aggregator Server coordinating the federated learning rounds.
 
----
+Execution Workflow-------------------------------------------------------------------
 
-## Execution Workflow
-
-### 1. Running the FL Clients
+1. Running the FL Clients
 
 Open multiple terminal tabs in the Client VM:
 
-#### Tab 1 – Device 0
+Tab 1 – Device 0
 
 ```bash
 cd /home/ubuntu/API_integration_device/Client0
 python3 flask_device0.py
 ```
 
-#### Tab 2 – Device 1
+Tab 2 – Device 1
 
 ```bash
 cd /home/ubuntu/API_integration_device/Client1
 python3 flask_device1.py
 ```
 
-#### Tab 3 – Kafka Subscriber (for Client0 or Client1)
+Tab 3 – Kafka Subscriber (for Client0 or Client1)
 
 ```bash
 cd /home/ubuntu/API_integration_device/Client0
 python3 kafka-subscribing.py
 ```
-#### Tab4 (Optinal) – connecting to EaaS using VPN (if needed)
+Tab 4 (Optinal) – connecting to EaaS using VPN (if needed)
 
 ---
 
-### 2. Running the Aggregator Server
+2. Running the Aggregator Server
 
 On the Server VM:
 
@@ -115,8 +98,7 @@ This command initiates the federated learning process with the following paramet
 ---
 
 
-
-## Citation
+Citation---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 If this asset is used in academic or industrial work, please cite the following publications:
 
@@ -134,7 +116,7 @@ Please include appropriate citation when reusing or building upon this framework
 
 ---
 
-## Notes
+Notes
 
 * Ensure all Python dependencies are installed on each VM before execution.
 * Kafka broker and EaaS endpoints must be accessible when corresponding features are enabled.
