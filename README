@@ -1,46 +1,86 @@
 Privacy-Preserving Federated Learning Anomaly Detection System
 
-Project Overview
+This repository contains a Privacy-Preserving Federated Learning (FL) Anomaly Detection System developed within the RIGOUROUS Project (Grant Agreement No. 101095933, Horizon Europe). The system demonstrates privacy-aware federated learning across distributed IoT/IIoT devices using Flask-based microservices.
 
-This repository contains a **Privacy-Preserving Federated Learning (FL) anomaly detection System** developed within the RIGOUROUS project (Grant Agreement No. 101095933, Horizon Europe). The framework is designed to enable privacy-aware model training across distributed IoT / IIoT devices. This setup demonstrates the feasibility of privacy-enhanced federated learning for IIoT anomaly detection using Flask based APIs.
-
-
+--------------------------------------------------------
 Key System Features 
+--------------------------------------------------------
 
-* Two-client federated learning architecture
-* Flask-based microservice communication
-* Kafka-based real-time message streaming (STIX generation)
-* Configurable training parameters
+1. Two-client Federated Learning architecture
 
----
-The system consists of:
+2. Flask-based microservice communication
 
-Two FL Clients (Client0 and Client1)** simulating IoT devices
-2. One Aggregator Server** coordinating the federated learning process
-3. Optional integration with **Encryption-as-a-Service (EaaS)** This option lets the client send data to a remote encryption service for homomorphic encryption instead of performing the computationally heavy encryption steps locally (The idea Provided by ICITFI Partner). In this code, only the request-handling logic is demonstrated, and the relevant encryption calls have been commented out. 
-4. Integration with **Kafka** to transmit generated STIX messages to the decision engine (Provided by ONE Partner)
+3. Kafka-based real-time streaming for STIX message generation
 
-The framework supports two operational modes:
+4. Configurable FL training parameters
 
-* **Plain Mode**: Standard federated learning without encryption (to enable, select *plain mode* in `option.py files both in clients and aggregator server`)
-* **Locally Paillier Mode**: Secure FL using Paillier homomorphic encryption for encrypted model exchange (to enable, select *Paillier mode* in `option.py files both in clients and aggregator server`)
+5. Supports Plain FL and Paillier Homomorphic Encryption modes
 
----------------------------------------------------- Datasets ---------------------------------------------------------------------------------
-This system is build based on WUSTL-IIoT(load_dataset.py) and DDoS_sandbox (load_dataset2.py) Datasets and is based on Flask APIs
------------------------------------------------------------------------------------------------------------------------------------------------
+6. Optional integration with Encryption-as-a-Service (EaaS)
 
+7. Designed for IIoT anomaly detection
 
+8. Built using WUSTL-IIoT and DDoS-Sandbox datasets
+
+--------------------------------------------------------
+System Components
+--------------------------------------------------------
+
+Client0 and Client1
+Simulated IoT devices performing local training in parallel.
+
+Aggregator Server
+Orchestrates FL rounds, aggregates model updates, and returns the global model.
+
+Optional EaaS Integration
+Allows clients to offload heavy Paillier homomorphic encryption to a remote encryption service.
+Only the request-handling logic is included; encryption calls are commented out.
+(Idea provided by ICT-FI partner.)
+
+Kafka Integration
+Sends STIX anomaly alerts to the decision engine.
+(Kafka files components provided by ONE partner.)
+
+Operational Modes
+1. Plain Mode
+
+Standard federated learning without encryption.
+Enable by selecting plain in option.py (clients + server).
+
+2. Paillier Homomorphic Encryption Mode
+
+Secure FL mode using Paillier encryption for model exchange.
+Enable by selecting paillier in option.py (clients + server)
+
+--------------------------------------------------------
+Datasets
+--------------------------------------------------------
+
+The system uses the following datasets:
+
+WUSTL-IIoT (load_dataset.py)
+
+DDoS-Sandbox (load_dataset2.py)
+
+-------------------------------------------------------
 System Architecture
+-------------------------------------------------------
 
-Client VM: This VM simulates two IoT devices running in parallel:
+Client VM
 
-* Device 0 → Client0
-* Device 1 → Client1
+Device 0 → Client0
 
-Server VM: This VM hosts the Aggregator Server coordinating the federated learning rounds.
+Device 1 → Client1
 
+Server VM
 
-Execution Workflow-------------------------------------------------------------------
+Runs the Aggregator Server
+
+Coordinates FL rounds
+
+-------------------------------------------------------------------
+Execution Workflow
+-------------------------------------------------------------------
 
 1. Running the FL Clients
 
@@ -74,14 +114,14 @@ Tab 4 (Optinal) – connecting to EaaS using VPN (if needed)
 
 On the Server VM:
 
-#### Tab 1 – Start the Aggregator API
+Tab 1 – Start the Aggregator API
 
 ```bash
 cd /home/ubuntu/EaaS/API_integration_server/Aggregator_server
 python3 flask_server.py
 ```
 
-#### Tab 2 – Trigger the Federated Learning Process
+Tab 2 – Trigger the Federated Learning Process
 
 ```bash
 curl -X POST "http://0.0.0.0:8803/start_federated" \
@@ -95,10 +135,9 @@ This command initiates the federated learning process with the following paramet
 * `local_epoch`: Number of local training epochs per client
 * `classification_type`: Model classification mode
 
----
-
-
-Citation---------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------
+Citation
+-------------------------------------------------------------------
 
 If this asset is used in academic or industrial work, please cite the following publications:
 
@@ -114,14 +153,14 @@ If this asset is used in academic or industrial work, please cite the following 
 
 Please include appropriate citation when reusing or building upon this framework or its associated assets.
 
----
-
+----------------------------------------------------------------------
 Notes
+----------------------------------------------------------------------
 
 * Ensure all Python dependencies are installed on each VM before execution.
 * Kafka broker and EaaS endpoints must be accessible when corresponding features are enabled.
 * This system is intended for research and demonstration purposes.
 
----
+----------------------------------------------------------------------
 
 © 2025 RIGOUROUS Project – University of Oulu
