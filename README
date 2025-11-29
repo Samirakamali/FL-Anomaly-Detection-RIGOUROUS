@@ -1,0 +1,145 @@
+# Privacy-Preserving Federated Learning Anomaly Detection System
+
+## Project Overview
+
+This repository contains a **Privacy-Preserving Federated Learning (FL) anomaly detection System** developed within the RIGOUROUS project (Grant Agreement No. 101095933, Horizon Europe). The framework is designed to enable privacy-aware model training across distributed IoT / IIoT devices. 
+
+
+## Key System Features 
+
+* Two-client federated learning architecture
+* Flask-based microservice communication
+* Kafka-based real-time message streaming (STIX generation)
+* Configurable training parameters
+
+---
+The system consists of:
+
+* **Two FL Clients (Client0 and Client1)** simulating IoT devices
+* **One Aggregator Server** coordinating the federated learning process
+* Optional integration with **Encryption-as-a-Service (EaaS)** This option lets the client send data to a remote encryption service for homomorphic encryption instead of performing the computationally heavy encryption steps locally. In this code, only the request-handling logic is demonstrated, and the relevant encryption calls have been commented out. 
+* Integration with **Kafka** to transmit generated STIX messages to the decision engine (Provided by ONE Partner)
+
+The framework supports two operational modes:
+
+* **Plain Mode**: Standard federated learning without encryption (to enable, select *plain mode* in `option.py files both in clients and aggregator server`)
+* **Locally Paillier Mode**: Secure FL using Paillier homomorphic encryption for encrypted model exchange (to enable, select *Paillier mode* in `option.py files both in clients and aggregator server`)
+
+
+This system is build based on WUSTL-IIoT(load_dataset.py) and DDoS_sandbox (load_dataset2.py) Datasets 
+---
+
+## Operational Modes Summary
+
+| Mode          | Description                                                                                                                |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Plain Mode    | Direct communication between clients and server without encryption. Suitable for testing and debugging.                    |
+| Paillier Mode | Secure encrypted model exchange using Paillier homomorphic encryption. Intended for privacy-critical deployment scenarios. |
+
+This setup demonstrates the feasibility of privacy-enhanced federated learning for IIoT anomaly detection under real deployment constraints.
+
+---
+
+## System Architecture
+
+### VM Configuration
+
+### Client VM
+
+This VM simulates two IoT devices running in parallel:
+
+* Device 0 → Client0
+* Device 1 → Client1
+
+### Server VM
+
+This VM hosts the Aggregator Server coordinating the federated learning rounds.
+
+---
+
+## Execution Workflow
+
+### 1. Running the FL Clients
+
+Open multiple terminal tabs in the Client VM:
+
+#### Tab 1 – Device 0
+
+```bash
+cd /home/ubuntu/API_integration_device/Client0
+python3 flask_device0.py
+```
+
+#### Tab 2 – Device 1
+
+```bash
+cd /home/ubuntu/API_integration_device/Client1
+python3 flask_device1.py
+```
+
+#### Tab 3 – Kafka Subscriber (for Client0 or Client1)
+
+```bash
+cd /home/ubuntu/API_integration_device/Client0
+python3 kafka-subscribing.py
+```
+#### Tab4 (Optinal) – connecting to EaaS using VPN (if needed)
+
+---
+
+### 2. Running the Aggregator Server
+
+On the Server VM:
+
+#### Tab 1 – Start the Aggregator API
+
+```bash
+cd /home/ubuntu/EaaS/API_integration_server/Aggregator_server
+python3 flask_server.py
+```
+
+#### Tab 2 – Trigger the Federated Learning Process
+
+```bash
+curl -X POST "http://0.0.0.0:8803/start_federated" \
+     -H "Content-Type: application/json" \
+     -d '{"num_iterations":10,"local_epoch":10,"classification_type":"mult"}'
+```
+
+This command initiates the federated learning process with the following parameters:
+
+* `num_iterations`: Number of FL rounds
+* `local_epoch`: Number of local training epochs per client
+* `classification_type`: Model classification mode
+
+---
+
+
+
+## Citation
+
+If this asset is used in academic or industrial work, please cite the following publications:
+
+1. **S. K. Poorazad, C. Benzaïd, T. Taleb**,
+   "Blockchain and Deep Learning-Based IDS for Securing SDN-Enabled Industrial IoT Environments",
+   *IEEE Global Communications Conference (GLOBECOM 2023)*, Kuala Lumpur, Malaysia, pp. 2760–2765, 2023.
+   DOI: 10.1109/GLOBECOM54140.2023.10436839
+
+2. **S. K. Poorazad, C. Benzaïd, T. Taleb**,
+   "A Novel Buffered Federated Learning Framework for Privacy-Driven Anomaly Detection in IIoT",
+   *IEEE Global Communications Conference (GLOBECOM 2024)*, Cape Town, South Africa, pp. 1725–1730, 2024.
+   DOI: 10.1109/GLOBECOM52923.2024.10901786
+
+Please include appropriate citation when reusing or building upon this framework or its associated assets.
+
+---
+
+## Notes
+
+* Ensure all Python dependencies are installed on each VM before execution.
+* Kafka broker and EaaS endpoints must be accessible when corresponding features are enabled.
+* This system is intended for research and demonstration purposes.
+
+---
+
+© 2025 RIGOUROUS Project – University of Oulu

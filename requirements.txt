@@ -1,0 +1,16 @@
+flask
+stix2
+requests
+numpy
+pandas
+scikit-learn
+torch
+torchvision
+time
+json
+termcolor
+argparse
+kafka
+logging
+phe
+
